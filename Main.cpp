@@ -2,16 +2,75 @@
 #include<GLFW/glfw3.h>
 #include<GL/glew.h>
 #include<iostream>
+#include<string>
+#include<fstream>
+constexpr auto numVAOs = 1; // will process during compile time
 using namespace std;
 
-void init(GLFWwindow* window) {
+GLuint renderingProgram;
+GLuint vao[numVAOs];
 
+
+string readShaderSource(const char* filePath) {
+	string content;
+	ifstream fileStream(filePath, ios::in);
+	string line = "";
+
+	while (!fileStream.eof()) {
+		getline(fileStream, line);
+		content.append(line + "\n");
+	}
+	fileStream.close();
+	return content;
 }
 
-// Color values
+GLuint createShaderProgram() {
+	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
+	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	string vertShaderStr = readShaderSource("D:\\All_Projs\\c++_Proj\\OGLPractise\\vertShader.glsl");
+	string fragShaderStr = readShaderSource("D:\\All_Projs\\c++_Proj\\OGLPractise\\fragShader.glsl");
+
+	const char* vertShaderSrc = vertShaderStr.c_str();
+	const char* fragShaderSrc = fragShaderStr.c_str();
+
+	glShaderSource(vShader, 1, &vertShaderSrc, NULL);
+	glShaderSource(fShader, 1, &fragShaderSrc, NULL);
+	glCompileShader(vShader);
+	glCompileShader(fShader);
+
+	GLuint vfProgram = glCreateProgram();
+	glAttachShader(vfProgram, vShader);
+	glAttachShader(vfProgram, fShader);
+	glLinkProgram(vfProgram);
+	return vfProgram;
+}
+
+void init(GLFWwindow* window) {
+	renderingProgram = createShaderProgram();
+	glGenVertexArrays(numVAOs, vao);
+	glBindVertexArray(vao[0]);
+}
+
+// https://stackoverflow.com/questions/61946603/glpointsize-fails-to-shrink-a-point
+// point values
+GLfloat pointSize = 100.0f;
+GLfloat increment = 2.0f;
+
+ //Color values
 void display(GLFWwindow* window, double currentTime) {
-	glClearColor(1.0, 0.0, 0.0, 1.0); // clamped to the range [0,1]
-	glClear(GL_COLOR_BUFFER_BIT); // clear color buffer(colors)
+	glClear(GL_COLOR_BUFFER_BIT);
+	glUseProgram(renderingProgram);
+	if (pointSize >= 400 || pointSize <= 2) {
+		increment *= -1.0f;
+		//cout << "increment " << increment << endl;
+	}
+
+	pointSize += increment;
+	//cout << pointSize << endl;
+
+	glPointSize(pointSize);
+	glDrawArrays(GL_POINTS, 0, 1);
 }
 
 int main(void) {
@@ -35,6 +94,7 @@ int main(void) {
 	}
 	glfwSwapInterval(1);
 	
+	init(window);
 	while (!glfwWindowShouldClose(window)) {
 		display(window, glfwGetTime());
 		glfwSwapBuffers(window);
