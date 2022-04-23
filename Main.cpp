@@ -61,16 +61,7 @@ GLfloat increment = 2.0f;
 void display(GLFWwindow* window, double currentTime) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(renderingProgram);
-	if (pointSize >= 400 || pointSize <= 2) {
-		increment *= -1.0f;
-		//cout << "increment " << increment << endl;
-	}
-
-	pointSize += increment;
-	//cout << pointSize << endl;
-
-	glPointSize(pointSize);
-	glDrawArrays(GL_POINTS, 0, 1);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 int main(void) {
