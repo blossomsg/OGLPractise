@@ -7,9 +7,46 @@
 constexpr auto numVAOs = 1; // will process during compile time
 using namespace std;
 
+// Logs
+void printShaderLog(GLuint shader) {
+	int len = 0;
+	int chWrittn = 0;
+	char* log;
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
+	if (len > 0) {
+		log= (char*)malloc(len);
+		glGetShaderInfoLog(shader, len, &chWrittn, log);
+		cout << "Shader Info Log:" << log << endl;
+		free(log);
+	}
+}
+
+void printProgramLog(int prog) {
+	int len = 0;
+	int chWrittn = 0;
+	char* log;
+	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &len);
+	if (len > 0) {
+		log = (char*)malloc(len);
+		glGetProgramInfoLog(prog, len, &chWrittn, log);
+		cout << "Program Info Log: " << log << endl;
+		free(log);
+	}
+}
+
+bool checkOpenGLError() {
+	bool foundError = false;
+	int glErr = glGetError();
+	while (glErr != GL_NO_ERROR) {
+		cout << "glError: " << glErr << endl;
+		foundError = true;
+		glErr = glGetError();
+	}
+	return foundError;
+}
+
 GLuint renderingProgram;
 GLuint vao[numVAOs];
-
 
 string readShaderSource(const char* filePath) {
 	string content;
@@ -25,6 +62,10 @@ string readShaderSource(const char* filePath) {
 }
 
 GLuint createShaderProgram() {
+	GLint vertCompiled;
+	GLint fragCompiled;
+	GLint linked;
+
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -36,13 +77,33 @@ GLuint createShaderProgram() {
 
 	glShaderSource(vShader, 1, &vertShaderSrc, NULL);
 	glShaderSource(fShader, 1, &fragShaderSrc, NULL);
+
 	glCompileShader(vShader);
+	checkOpenGLError();
+	glGetShaderiv(vShader, GL_COMPILE_STATUS, &vertCompiled);
+	if (vertCompiled != 1) {
+		cout << "vertex compilation failed" << endl;
+		printShaderLog(vShader);
+	}
+	
 	glCompileShader(fShader);
+	checkOpenGLError();
+	glGetShaderiv(fShader, GL_COMPILE_STATUS, &fragCompiled);
+	if (fragCompiled != 1) {
+		cout << "frag compilation failed" << endl;
+		printShaderLog(fShader);
+	}
 
 	GLuint vfProgram = glCreateProgram();
 	glAttachShader(vfProgram, vShader);
 	glAttachShader(vfProgram, fShader);
 	glLinkProgram(vfProgram);
+	checkOpenGLError();
+	glGetProgramiv(vfProgram, GL_LINK_STATUS, &linked);
+	if (linked != 1) {
+		cout << "linking failed" << endl;
+		printProgramLog(vfProgram);
+	}
 	return vfProgram;
 }
 
