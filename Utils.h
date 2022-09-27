@@ -11,14 +11,17 @@ private:
 	// OpenGL error checking voids
 	static void printShaderLog(GLuint shader);
 	static void printProgramLog(int prog);
-	static bool checkOpenGLError();
+	
 	// static GLuint createShaderProgram(); // Not required as all the variants are mentioned in public
 	// Reading GLSL Source from files
-	static std::string readShaderSource(const char* filepath);
+	//static std::string readShaderSource(const char* filepath);
 	// Prepare shaders
 	static GLuint prepareShader(int shaderTYPE, const char* shaderPath);
 	static int finalizeShaderProgram(GLuint sprogram);
 public:
+	static bool checkOpenGLError();
+	// delete later
+	static std::string readShaderSource(const char* filepath);
 	static GLuint createShaderProgram(const char* vp, const char* fp);
 	static GLuint createShaderProgram(const char* vp, const char* gp, const char* fp);
 	static GLuint createShaderProgram(const char* vp, const char* tCS, const char* tES, const char* fp);
