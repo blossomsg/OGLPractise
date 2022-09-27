@@ -97,7 +97,7 @@ GLuint Utils::createShaderProgram(const char* vp, const char* fp) {
 	glAttachShader(vfProgram, vShader);
 	glAttachShader(vfProgram, fShader);
 	finalizeShaderProgram(vfProgram);
-	return GLuint();
+	return vfProgram;
 }
 
 GLuint Utils::createShaderProgram(const char* vp, const char* gp, const char* fp) {
