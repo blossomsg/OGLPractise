@@ -1,43 +1,50 @@
 #include<iostream>
-#include<array>  //for std::size()
+#include<iomanip>
 
 int main() {
-	long value_01{}; //empty variable
-	long value_02{76}; //variable value
-	long value_03{83}; //variable value
-	//char proverb{ 'H' };
-	//char* pproverbs{ "have a good day" }; //wrong
-	const char* pproverb{ "Have a good day" };
-
-	const char* pstars[]{
-		"Fatty Arbuckle", "Clara Bow", "Lassie", "Slim Pickens", "Boris Karloff", "Mae West", "Oliver Hardy", "Greta Garbo"
-	};
-
-	//stream out memory value 
-	auto* pvalue_01{&value_01};
-	std::cout << pvalue_01 << std::endl; 
-
-	//stream out by dereferencing the pointer
-	auto* pvalue_02{ &value_02 };
-	std::cout << *pvalue_02 << std::endl;
-
-	//stream out variable within variable
-	long vvalue_03{ value_03 };
-	std::cout << vvalue_03 << std::endl;
-
-	auto* ppproverb{ &pproverb };
-	std::cout << *ppproverb << std::endl;
-
-	std::cout << "Pick a lucky star! Ender a number between 1 and " << std::size(pstars) << ": ";
-	size_t choice{};
-	std::cin >> choice;
-
-	if (choice >= 1 && choice <= std::size(pstars)) {
-		std::cout << "Your lucky star is " << pstars[choice - 1] << std::endl;
+	// increment addition
+	long values_01[]{ 1,2,3,4,5,6,7,8,9 };
+	
+	long save_values_01{};
+	for (size_t i{}; i < std::size(values_01); ++i) {
+		save_values_01 += values_01[i];
 	}
-	else {
-		std::cout << "Sorry, you haven't got a lucky star." << std::endl;
-	}
+	std::cout << "The sum of values_01 are " << save_values_01 << std::endl;
 
-	return 0;
+	// floating point loop
+	const double pi{ 3.14159265358979323846 };
+	const size_t perline{ 3 };
+	size_t linecount{};
+	for (double radius{ 0.2 }; radius <= 3.0; radius += 0.2) {
+		//std::cout << "radius = " << std::setw(1) << radius << "area = " << std::setw(1) << pi * radius * radius << std::endl;
+		std::cout << std::fixed << std::setprecision(2) << "\n" << "radius =" << std::setw(5) << radius << "\n" << "area =" << std::setw(6) << pi * radius * radius;
+	}
+		// When perline outputs have been written
+		if(perline == ++linecount) {
+			std::cout << std::endl;
+			linecount = 0;
+		}
+		std::cout << std::endl;
+
+	// factorial
+		unsigned int limit{};
+		std::cout << "This program calculates n! and the sum of the integers" << "up to n for values 1 to limit .\n";
+		std::cout << "What upper limit for n would you like?";
+		std::cin >> limit;
+
+		// Output column heading
+		std::cout << std::setw(8) << "integer" << std::setw(8) << "sum" << std::setw(20) << "factorial" << std::endl;
+		for (unsigned long long n{ 1 }, sum{}, factorial{ 1 }; n <= limit; ++n) {
+			sum += n;
+			factorial *= n;
+			std::cout << std::setw(8) << n << std::setw(8) << sum << std::setw(20) << factorial << std::endl;
+		}
+
+	int i{ 1 };
+	int value_02{ 1 };
+	int value_03{ 1 };
+	int value_04{ 1 };
+
+	std::cout << (value_02 += ++i, value_03 += ++i, value_04 += ++i) << std::endl;
+
 }
