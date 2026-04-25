@@ -6,7 +6,11 @@
 void init(GLFWwindow *window) {}
 
 void display(GLFWwindow *window, double currentTime) {
-  glClearColor(1.0, 0.42, 0.31, 1.0f);
+  double red{(sin(currentTime) * 0.5f) + 0.5f};
+  double green{(sin(currentTime + 2.0f) * 0.5f) + 0.5f};
+  double blue{(sin(currentTime + 4.0f) * 0.5f) + 0.5f};
+
+  glClearColor(red, green, blue, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
