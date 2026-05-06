@@ -1,4 +1,4 @@
-// Right angle triangle example using OpenGL 4.3
+// Right angle triangle - GL_LINE_LOOP example using OpenGL 4.3
 #define GLFW_INCLUDE_NONE // This helps to include glew and glfw in any order
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -47,7 +47,7 @@ void init(GLFWwindow *window) {
 
 void display(GLFWwindow *window, double currentTime) {
   glUseProgram(renderingProgram);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glDrawArrays(GL_LINE_LOOP, 0, 3);
   glPointSize(30.0f);
 }
 
