@@ -1,5 +1,6 @@
-// Right angle triangle - GL_LINE_LOOP example using OpenGL 4.3
+// Right angle triangle
 #define GLFW_INCLUDE_NONE // This helps to include glew and glfw in any order
+#include "Utils.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -11,17 +12,12 @@ GLuint vao[numVAOs];
 
 GLuint createShaderProgram() {
 
-  const char *vshaderSource{
-      "#version 430 \n"
-      "void main(void) \n"
-      "{if (gl_VertexID == 0) gl_Position = vec4(0.25, -0.25, 0.0, 1.0); else "
-      "if (gl_VertexID == 1) gl_Position = vec4(-0.25, -0.25, 0.0, 1.0); else "
-      "gl_Position = vec4( 0.25, 0.25, 0.0, 1.0);}"};
+  // Created a separate utils function for reading shader source code
+  std::string vshader{Utils::readShaderSource("vertexShader.glsl")};
+  const char *vshaderSource{vshader.c_str()};
 
-  const char *fshaderSource{"#version 430 \n"
-                            "out vec4 color; \n"
-                            "void main(void) \n"
-                            "{color = vec4(1.0, 0.6, 0.0, 1.0);}"};
+  std::string fshader{Utils::readShaderSource("fragmentShader.glsl")};
+  const char *fshaderSource{fshader.c_str()};
 
   GLuint vShader{glCreateShader(GL_VERTEX_SHADER)};
   GLuint fShader{glCreateShader(GL_FRAGMENT_SHADER)};
@@ -47,7 +43,7 @@ void init(GLFWwindow *window) {
 
 void display(GLFWwindow *window, double currentTime) {
   glUseProgram(renderingProgram);
-  glDrawArrays(GL_LINE_LOOP, 0, 3);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
   glPointSize(30.0f);
 }
 
